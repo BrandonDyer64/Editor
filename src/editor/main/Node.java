@@ -2,12 +2,13 @@ package editor.main;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
  * Created by brandon on 8/2/16.
  */
-public class Node {
+public class Node implements Serializable {
     public static final int WIDTH = 256, HEIGHT = 128;
     public Rectangle bound;
     public Editor.NodeType type;

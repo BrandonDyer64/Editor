@@ -25,7 +25,7 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
             OVAL_SIZE = 4,
             RESCALE_SPEED = 12;
 
-    public Editor(Language language) {
+    public Editor(Language language, LinkedList<Node> nodes) {
         this.language = language;
         System.out.println("Using language " + language.getName() + " with " + language.getNodeTypes().length + " node types.");
         JFrame frame = new JFrame("Editor");
@@ -39,12 +39,14 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        NodeType type = language.getNodeTypes()[0];
-        Node myNode = new Node(128, 128, type.width, type.height, type);
-        topNodes.add(myNode);
-        lastNodeToDrag = myNode;
-
-        System.out.println(myNode.parse());
+        if (nodes == null) {
+            NodeType type = language.getNodeTypes()[0];
+            Node myNode = new Node(128, 128, type.width, type.height, type);
+            topNodes.add(myNode);
+            lastNodeToDrag = myNode;
+        } else {
+            topNodes = nodes;
+        }
 
         new Thread(new Runnable() {
             @Override
@@ -63,10 +65,6 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
                 }
             }
         }).start();
-    }
-
-    public static void main(String[] args) {
-        new Editor(new LanguagePython());
     }
 
     public int i = 0;
@@ -214,9 +212,7 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
                         nodeToDrag = lastNodeToDrag;
                         break;
                     case KeyEvent.VK_W:
-                        for (Node node : topNodes) {
-                            System.out.println(node.parse());
-                        }
+                        Driver.saveNodes(topNodes);
                         break;
                     case KeyEvent.VK_A:
                         menu = new Menu() {
@@ -297,7 +293,7 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
         public LinkedList<Node> loadFromSource(String source);
     }
 
-    public static abstract class NodeType {
+    public static abstract class NodeType implements Serializable {
         public String name;
         public int outputNum;
         public boolean isTextEditor;

@@ -41,7 +41,16 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
 
         if (nodes == null) {
             NodeType type = language.getNodeTypes()[0];
-            Node myNode = new Node(128, 128, type.width, type.height, type);
+            Node myNode = new Node(64, 64, 512, 256, type);
+            myNode.meta = " Click on a node to slect or drag it.\n" +
+                    "If a node is selected type to edit its data.\n" +
+                    "To deselect a node, press escape, or click \noutside of it.\n" +
+                    "When a node is deselected, you may use these \nkeyboard commands:\n" +
+                    "  A - Add a node\n" +
+                    "  W - Save your work\n" +
+                    "  ESCAPE - Delete previously selected node\n" +
+                    "  Z - Undelete last deleted node\n" +
+                    "  Arrow Keys - Resize previously selected node";
             topNodes.add(myNode);
             lastNodeToDrag = myNode;
         } else {
@@ -172,8 +181,7 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
         if (nodeToDrag != null) {
-            nodeToDrag.bound.x += (int) (mouseEvent.getX() / zoom) - mouse.x;
-            nodeToDrag.bound.y += (int) (mouseEvent.getY() / zoom) - mouse.y;
+            nodeToDrag.move((int) (mouseEvent.getX() / zoom) - mouse.x, (int) (mouseEvent.getY() / zoom) - mouse.y);
         } else {
             viewportOffset.x -= (int) (mouseEvent.getX() / zoom) - mouse.x;
             viewportOffset.y -= (int) (mouseEvent.getY() / zoom) - mouse.y;
@@ -287,7 +295,9 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
         public NodeType[] getNodeTypes();
 
         public String getName();
+
         public String getExtension();
+
         public String getComment();
 
         public LinkedList<Node> loadFromSource(String source);

@@ -40,6 +40,16 @@ public class Node implements Serializable {
         this(x, y, w, h, type, "");
     }
 
+    public void move(int x, int y) {
+        bound.x += x;
+        bound.y += y;
+        for (int i = 0; i < outputNodes.length; i++) {
+            if (outputNodes[i] != null) {
+                outputNodes[i].move(x, y);
+            }
+        }
+    }
+
     public String parse() {
         return type.parse(meta.trim(), outputNodes);
     }

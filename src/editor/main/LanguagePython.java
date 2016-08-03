@@ -12,19 +12,16 @@ public class LanguagePython implements Serializable, Editor.Language {
             new Editor.NodeType() {
 
                 {
-                    name = "Custom";
-                    outputNum = 1;
+                    name = "Code";
+                    outputNum = 0;
                     isTextEditor = true;
-                    syntaxColor = Color.YELLOW;
+                    syntaxColor = Color.CYAN;
                     width = 512 - 128;
+                    height = 128 - 32;
                 }
 
                 public String parse(String meta, Node[] outputNodes) {
-                    String data = "";
-                    if (outputNodes[0] != null) {
-                        data += meta + ":\n" + tab(outputNodes[0].parse()) + "\n";
-                    }
-                    return data;
+                    return meta;
                 }
             },
             new Editor.NodeType() {
@@ -47,21 +44,6 @@ public class LanguagePython implements Serializable, Editor.Language {
                         }
                     }
                     return data;
-                }
-            },
-            new Editor.NodeType() {
-
-                {
-                    name = "Code";
-                    outputNum = 0;
-                    isTextEditor = true;
-                    syntaxColor = Color.CYAN;
-                    width = 512 - 128;
-                    height = 128 - 32;
-                }
-
-                public String parse(String meta, Node[] outputNodes) {
-                    return meta;
                 }
             },
             new Editor.NodeType() {
@@ -96,6 +78,60 @@ public class LanguagePython implements Serializable, Editor.Language {
                     String data = "";
                     if (outputNodes[0] != null) {
                         data += "for " + meta + ":\n" + tab(outputNodes[0].parse()) + "\n";
+                    }
+                    return data;
+                }
+            },
+            new Editor.NodeType() {
+
+                {
+                    name = "While";
+                    outputNum = 1;
+                    isTextEditor = true;
+                    syntaxColor = Color.MAGENTA;
+                    width = 512 - 128;
+                }
+
+                public String parse(String meta, Node[] outputNodes) {
+                    String data = "";
+                    if (outputNodes[0] != null) {
+                        data += "while " + meta + ":\n" + tab(outputNodes[0].parse()) + "\n";
+                    }
+                    return data;
+                }
+            },
+            new Editor.NodeType() {
+
+                {
+                    name = "Class";
+                    outputNum = 1;
+                    isTextEditor = true;
+                    syntaxColor = Color.BLACK;
+                    width = 512 - 128;
+                }
+
+                public String parse(String meta, Node[] outputNodes) {
+                    String data = "";
+                    if (outputNodes[0] != null) {
+                        data += "class " + meta + ":\n" + tab(outputNodes[0].parse()) + "\n";
+                    }
+                    return data;
+                }
+            },
+            new Editor.NodeType() {
+
+                {
+                    name = "Custom";
+                    outputNum = 1;
+                    isTextEditor = true;
+                    syntaxColor = Color.YELLOW;
+                    width = 512 - 128;
+                }
+
+                public String parse(String meta, Node[] outputNodes) {
+                    String data = "";
+                    if (outputNodes[0] != null) {
+                        data += meta + ":\n" + tab(outputNodes[0].parse()) + "\n";
                     }
                     return data;
                 }

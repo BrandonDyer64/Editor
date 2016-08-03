@@ -8,8 +8,8 @@ import static editor.main.Editor.NodeType;
 
 public class LanguagePython implements Serializable, Editor.Language {
 
-    public NodeType[] nodeTypes = new NodeType[]{
-            new NodeType() {
+    public Editor.NodeType[] nodeTypes = new Editor.NodeType[]{
+            new Editor.NodeType() {
 
                 {
                     name = "Custom";
@@ -19,7 +19,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     width = 512 - 128;
                 }
 
-                public String parse(String meta, Editor.Node[] outputNodes) {
+                public String parse(String meta, Node[] outputNodes) {
                     String data = "";
                     if (outputNodes[0] != null) {
                         data += meta + ":\n" + tab(outputNodes[0].parse()) + "\n";
@@ -27,7 +27,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     return data;
                 }
             },
-            new NodeType() {
+            new Editor.NodeType() {
 
                 {
                     name = "If";
@@ -36,7 +36,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     syntaxColor = Color.ORANGE;
                 }
 
-                public String parse(String meta, Editor.Node[] outputNodes) {
+                public String parse(String meta, Node[] outputNodes) {
                     String data = "";
                     if (outputNodes[0] != null) {
                         data += "if " + meta + ":\n";
@@ -49,7 +49,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     return data;
                 }
             },
-            new NodeType() {
+            new Editor.NodeType() {
 
                 {
                     name = "Code";
@@ -60,11 +60,11 @@ public class LanguagePython implements Serializable, Editor.Language {
                     height = 128 - 32;
                 }
 
-                public String parse(String meta, Editor.Node[] outputNodes) {
+                public String parse(String meta, Node[] outputNodes) {
                     return meta;
                 }
             },
-            new NodeType() {
+            new Editor.NodeType() {
 
                 {
                     name = "Function";
@@ -74,7 +74,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     width = 512 - 128;
                 }
 
-                public String parse(String meta, Editor.Node[] outputNodes) {
+                public String parse(String meta, Node[] outputNodes) {
                     String data = "";
                     if (outputNodes[0] != null) {
                         data += "def " + meta + ":\n" + tab(outputNodes[0].parse()) + "\n";
@@ -82,7 +82,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     return data;
                 }
             },
-            new NodeType() {
+            new Editor.NodeType() {
 
                 {
                     name = "For";
@@ -92,7 +92,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     width = 512 - 128;
                 }
 
-                public String parse(String meta, Editor.Node[] outputNodes) {
+                public String parse(String meta, Node[] outputNodes) {
                     String data = "";
                     if (outputNodes[0] != null) {
                         data += "for " + meta + ":\n" + tab(outputNodes[0].parse()) + "\n";
@@ -100,7 +100,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     return data;
                 }
             },
-            new NodeType() {
+            new Editor.NodeType() {
 
                 {
                     name = "Split 2";
@@ -111,7 +111,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     height = 128;
                 }
 
-                public String parse(String meta, Editor.Node[] outputNodes) {
+                public String parse(String meta, Node[] outputNodes) {
                     String data = "";
                     for (int i = 0; i < outputNum; i++) {
                         if (outputNodes[i] != null)
@@ -120,7 +120,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     return data;
                 }
             },
-            new NodeType() {
+            new Editor.NodeType() {
 
                 {
                     name = "Split 4";
@@ -131,7 +131,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     height = 256;
                 }
 
-                public String parse(String meta, Editor.Node[] outputNodes) {
+                public String parse(String meta, Node[] outputNodes) {
                     String data = "";
                     for (int i = 0; i < outputNum; i++) {
                         if (outputNodes[i] != null)
@@ -140,7 +140,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     return data;
                 }
             },
-            new NodeType() {
+            new Editor.NodeType() {
 
                 {
                     name = "Split 8";
@@ -151,7 +151,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     height = 512;
                 }
 
-                public String parse(String meta, Editor.Node[] outputNodes) {
+                public String parse(String meta, Node[] outputNodes) {
                     String data = "";
                     for (int i = 0; i < outputNum; i++) {
                         if (outputNodes[i] != null)
@@ -166,7 +166,7 @@ public class LanguagePython implements Serializable, Editor.Language {
         return "\t" + code.replaceAll("\n", "\n\t");
     }
 
-    public NodeType[] getNodeTypes() {
+    public Editor.NodeType[] getNodeTypes() {
         return nodeTypes;
     }
 
@@ -184,14 +184,14 @@ public class LanguagePython implements Serializable, Editor.Language {
         return "#";
     }
 
-    public LinkedList<Editor.Node> loadFromSource(String source) {
-        LinkedList<Editor.Node> nodes = new LinkedList<>();
+    public LinkedList<Node> loadFromSource(String source) {
+        LinkedList<Node> nodes = new LinkedList<>();
 
         return nodes;
     }
 
     public class TNode {
-        public NodeType type;
+        public Editor.NodeType type;
 
     }
 

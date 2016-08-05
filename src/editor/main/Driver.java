@@ -1,5 +1,9 @@
 package editor.main;
 
+import editor.main.languages.LanguageJava;
+import editor.main.languages.LanguageJson;
+import editor.main.languages.LanguagePython;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -13,10 +17,14 @@ public class Driver {
 
     public static Editor.Language[] languages = {
             new LanguagePython(),
+            new LanguageJava(),
+            new LanguageJson(),
     };
 
     public static String file;
     public static Editor.Language lang;
+
+    public static String code = "";
 
     public static void main(String[] args) {
         if (args.length > 0) {
@@ -41,18 +49,24 @@ public class Driver {
         new Editor(lang, loadNodes());
     }
 
+    public static String compile(LinkedList<Node> nodes) {
+        String code = "";
+        for (int i = 0; i < nodes.size(); i++) {
+            code += nodes.get(i).parse() + "\n";
+        }
+        Driver.code = code;
+        return code;
+    }
+
     public static void saveNodes(LinkedList<Node> nodes) {
         try {
             Files.deleteIfExists(Paths.get(file));
-            Files.deleteIfExists(Paths.get(file+"+"));
-            String code = "";
-            for (Node node : nodes) {
-                code += node.parse() + "\n";
-            }
+            Files.deleteIfExists(Paths.get(file + "+"));
+            String code = compile(nodes);
             Files.write(Paths.get(file), code.getBytes());
             System.out.println(code);
 
-            FileOutputStream stringOut = new FileOutputStream(file+"+");
+            FileOutputStream stringOut = new FileOutputStream(file + "+");
             ObjectOutputStream out = new ObjectOutputStream(stringOut);
             out.writeObject(nodes);
         } catch (Exception e) {
@@ -63,7 +77,7 @@ public class Driver {
     public static LinkedList<Node> loadNodes() {
         if (Files.exists(Paths.get(file + "+"))) {
             try {
-                FileInputStream stringIn = new FileInputStream(file+"+");
+                FileInputStream stringIn = new FileInputStream(file + "+");
                 ObjectInputStream in = new ObjectInputStream(stringIn);
                 LinkedList<Node> nodes = (LinkedList<Node>) in.readObject();
                 in.close();

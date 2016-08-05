@@ -1,9 +1,5 @@
-if something:
-	if somethingelse:
-		asdas
-	
-else:
-	if another:
-		asdasdadf
-	
+#@$0
+def ajhsd:
+	#@$1
+	ausdgjhasd
 

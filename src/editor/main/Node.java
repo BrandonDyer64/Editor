@@ -51,7 +51,11 @@ public class Node implements Serializable {
     }
 
     public String parse() {
-        return type.parse(meta.trim(), outputNodes);
+        if (Driver.lang.getComment() == null) {
+            return type.parse(meta.trim(), outputNodes);
+        } else {
+            return (Editor.saveDebug ? Driver.lang.getComment() + "@$" + Editor.getNodes().indexOf(this) + "\n" : "") + type.parse(meta.trim(), outputNodes);
+        }
     }
 
     public Point[] getOutputPoints() {
@@ -104,7 +108,7 @@ public class Node implements Serializable {
                 curserTime -= 0.5;
             }
         } else {
-            g.setColor(Color.LIGHT_GRAY);
+            g.setColor(type.syntaxColor);
             showCurser = true;
         }
         if (meta.length() > 0) {
@@ -129,8 +133,10 @@ public class Node implements Serializable {
         g.drawString(type.name, bound.x - offset.x + Editor.HEADER_SIZE * (1f / 3f), bound.y + Editor.HEADER_SIZE * (2f / 3f) - offset.y);
         g.setColor(Color.LIGHT_GRAY);
         String[] metas = meta.split("\n");
-        for (int i = 0; i < metas.length; i++) {
-            g.drawString(metas[i], bound.x - offset.x + Editor.HEADER_SIZE * (1f / 3f), bound.y + Editor.HEADER_SIZE * (5f / 3f) - offset.y + i * (Editor.HEADER_SIZE * (2f / 3f)));
+        if (Editor.zoom >= 0.5) {
+            for (int i = 0; i < metas.length; i++) {
+                g.drawString(metas[i], bound.x - offset.x + Editor.HEADER_SIZE * (1f / 3f), bound.y + Editor.HEADER_SIZE * (5f / 3f) - offset.y + i * (Editor.HEADER_SIZE * (2f / 3f)));
+            }
         }
         Point[] outputPoints = getOutputPoints();
         Point myInputPoint = getInputPoint();
@@ -161,8 +167,12 @@ public class Node implements Serializable {
     }
 
     public void keyTyped(KeyEvent keyEvent) {
+        if (Editor.zoom < 0.5) {
+            return;
+        }
         if (keyEvent.getKeyCode() == KeyEvent.VK_BACK_SPACE && curserLoc > 0) {
             char[] charray = meta.toCharArray();
+            charray[curserLoc] = curserChar;
             charray[curserLoc - 1] = '\r';
             meta = String.valueOf(charray);
             meta = meta.replace("\r", "");

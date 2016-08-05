@@ -12,10 +12,14 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
 
     public Canvas canvas;
     public Language language;
-    public LinkedList<Node> topNodes = new LinkedList<Node>();
+    public static LinkedList<Node> topNodes = new LinkedList<Node>();
     public Point viewportOffset = new Point(0, 0);
+    public static String message = "";
+    public static double messageTime = 0;
+    public static boolean saveDebug = true;
     public Point mouse = new Point(0, 0);
     public Menu menu = null;
+    public ErrorMenu errorMenu = null;
     public boolean onClick = false;
     public MouseEvent mouseEvent;
     public Node deletedNode = null;
@@ -79,6 +83,7 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
     public int i = 0;
 
     public void render(double delta) {
+        messageTime -= delta;
         i++;
         BufferStrategy bs = canvas.getBufferStrategy();
         if (bs == null) {
@@ -101,8 +106,21 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
             menu.render(g);
         }
 
+        if (errorMenu != null) {
+            errorMenu.render(g);
+        }
+
+        if (messageTime > 0) {
+            g.drawString(message, HEADER_SIZE * (1f / 3f), HEADER_SIZE * (2f / 3f));
+        }
+
         g.dispose();
         bs.show();
+    }
+
+    public static void message(String message) {
+        Editor.message = message;
+        messageTime = 2f;
     }
 
     @Override
@@ -196,7 +214,7 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
         mouse.y = (int) (mouseEvent.getY() / zoom);
     }
 
-    public LinkedList<Node> getNodes() {
+    public static LinkedList<Node> getNodes() {
         LinkedList<Node> nodes = new LinkedList<Node>();
         for (Node node : topNodes) {
             node.getSubNodes(nodes);
@@ -214,6 +232,14 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
         try {
             if (nodeToDrag != null) {
                 nodeToDrag.keyTyped(keyEvent);
+            } else if (errorMenu != null) {
+                if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
+                    ErrorMenu m = errorMenu;
+                    errorMenu = null;
+                    nodeToDrag = m.get();
+                } else {
+                    errorMenu.ketTyped(keyEvent.getKeyChar());
+                }
             } else {
                 switch (keyEvent.getKeyCode()) {
                     case KeyEvent.VK_I:
@@ -221,6 +247,15 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
                         break;
                     case KeyEvent.VK_W:
                         Driver.saveNodes(topNodes);
+                        message("Saved");
+                        break;
+                    case KeyEvent.VK_E:
+                        errorMenu = new ErrorMenu() {
+                            {
+                                x = mouse.x;
+                                y = mouse.y;
+                            }
+                        };
                         break;
                     case KeyEvent.VK_A:
                         menu = new Menu() {
@@ -245,6 +280,7 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
                         topNodes.remove(lastNodeToDrag);
                         deletedNode = lastNodeToDrag;
                         lastNodeToDrag = null;
+                        message("Deleted Node");
                         break;
                     case KeyEvent.VK_RIGHT:
                         if (lastNodeToDrag != null)
@@ -261,6 +297,10 @@ public class Editor implements Serializable, MouseListener, MouseMotionListener,
                     case KeyEvent.VK_DOWN:
                         if (lastNodeToDrag != null)
                             lastNodeToDrag.bound.height += RESCALE_SPEED;
+                        break;
+                    case KeyEvent.VK_K:
+                        saveDebug ^= true;
+                        message("Save Line Numbers For Error Logging = " + saveDebug);
                         break;
                     default:
                         System.out.println("UNKNOWN KEY BINDING!!!");

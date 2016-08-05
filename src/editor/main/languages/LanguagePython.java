@@ -1,4 +1,7 @@
-package editor.main;
+package editor.main.languages;
+
+import editor.main.Editor;
+import editor.main.Node;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -88,7 +91,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     name = "While";
                     outputNum = 1;
                     isTextEditor = true;
-                    syntaxColor = Color.MAGENTA;
+                    syntaxColor = Color.PINK;
                     width = 512 - 128;
                 }
 
@@ -142,7 +145,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     name = "Split 2";
                     outputNum = 2;
                     isTextEditor = true;
-                    syntaxColor = Color.WHITE;
+                    syntaxColor = Color.MAGENTA;
                     width = 128;
                     height = 128;
                 }
@@ -162,7 +165,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     name = "Split 4";
                     outputNum = 4;
                     isTextEditor = true;
-                    syntaxColor = Color.WHITE;
+                    syntaxColor = Color.MAGENTA;
                     width = 128;
                     height = 256;
                 }
@@ -182,7 +185,7 @@ public class LanguagePython implements Serializable, Editor.Language {
                     name = "Split 8";
                     outputNum = 8;
                     isTextEditor = true;
-                    syntaxColor = Color.WHITE;
+                    syntaxColor = Color.MAGENTA;
                     width = 128;
                     height = 512;
                 }

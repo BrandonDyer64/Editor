@@ -1,13 +1,12 @@
 # Editor
-A node based, graphical editor.
-
-![alt tag]()
+A node based, graphical code editor.
 
 ### Currently Supported Languages
  * Python
-
-###Planned Languages
  * Java
+ * JSON
+ 
+###Planned Languages
  * JavaScript
  * PHP
  * C
